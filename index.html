@@ -937,6 +937,8 @@
 <script>
   // ── AUTH ──────────────────────────────────────────────
   const PW = 'stayfocused';
+  const SUPA_URL = 'https://hieiuwvjjybdrfthrfzn.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZWl1d3ZqanliZHJmdGhyZnpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDE5ODksImV4cCI6MjA5MTMxNzk4OX0.Lus-9tzm9C3ZukBC6YL-3HOTk4Ziwu-e-FciGyMTvZc';
 
   function checkLogin() {
     if (document.getElementById('pw-input').value === PW) {
@@ -962,15 +964,141 @@
   // ── STATE ─────────────────────────────────────────────
   let S = {};
   const TODAY = new Date().toISOString().split('T')[0];
-  function save() { localStorage.setItem('sf2', JSON.stringify(S)); }
+  async function save() {
+  localStorage.setItem('sf2', JSON.stringify(S));
+  await syncToSupabase();
+}
 
-  function boot() {
+async function syncToSupabase() {
+  const headers = {
+    'Content-Type': 'application/json',
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY
+  };
+  await fetch(SUPA_URL + '/rest/v1/tasks?date=eq.' + TODAY, {
+    method: 'DELETE', headers
+  });
+  const tasks = S.tasks[TODAY] || [];
+  if (tasks.length > 0) {
+    await fetch(SUPA_URL + '/rest/v1/tasks', {
+      method: 'POST', headers,
+      body: JSON.stringify(tasks.map(t => ({
+        date: TODAY, text: t.text, bereich: t.b, prio: t.p, done: t.done
+      })))
+    });
+  }
+  if (S.checkins[TODAY]) {
+    const c = S.checkins[TODAY];
+    await fetch(SUPA_URL + '/rest/v1/checkins?date=eq.' + TODAY, {
+      method: 'DELETE', headers
+    });
+    await fetch(SUPA_URL + '/rest/v1/checkins', {
+      method: 'POST', headers,
+      body: JSON.stringify([{ date: TODAY, mood: c.mood, note: c.note, time: c.time }])
+    });
+  }
+}
+
+async function loadFromSupabase() {
+  const headers = {
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY
+  };
+  try {
+    const tRes = await fetch(SUPA_URL + '/rest/v1/tasks?select=*', { headers });
+    const tasks = await tRes.json();
+    S.tasks = {};
+    tasks.forEach(t => {
+      if (!S.tasks[t.date]) S.tasks[t.date] = [];
+      S.tasks[t.date].push({ text: t.text, b: t.bereich, p: t.prio, done: t.done });
+    });
+    const cRes = await fetch(SUPA_URL + '/rest/v1/checkins?select=*', { headers });
+    const checkins = await cRes.json();
+    S.checkins = {};
+    checkins.forEach(c => {
+      S.checkins[c.date] = { mood: c.mood, note: c.note, time: c.time };
+    });
+    localStorage.setItem('sf2', JSON.stringify(S));
+  } catch(e) {
+    console.log('Offline – lokale Daten werden verwendet.');
+  }
+}
+
+
+async function syncToSupabase() {
+  const headers = {
+    'Content-Type': 'application/json',
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY
+  };
+
+  // Aufgaben synchronisieren
+  const tasks = S.tasks[TODAY] || [];
+  await fetch(SUPA_URL + '/rest/v1/tasks?date=eq.' + TODAY, {
+    method: 'DELETE', headers
+  });
+  if (tasks.length > 0) {
+    await fetch(SUPA_URL + '/rest/v1/tasks', {
+      method: 'POST', headers,
+      body: JSON.stringify(tasks.map(t => ({
+        date: TODAY, text: t.text, bereich: t.b, prio: t.p, done: t.done
+      })))
+    });
+  }
+
+  // Check-in synchronisieren
+  if (S.checkins[TODAY]) {
+    const c = S.checkins[TODAY];
+    await fetch(SUPA_URL + '/rest/v1/checkins?date=eq.' + TODAY, {
+      method: 'DELETE', headers
+    });
+    await fetch(SUPA_URL + '/rest/v1/checkins', {
+      method: 'POST', headers,
+      body: JSON.stringify([{ date: TODAY, mood: c.mood, note: c.note, time: c.time }])
+    });
+  }
+}
+
+async function loadFromSupabase() {
+  const headers = {
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY
+  };
+
+  try {
+    // Aufgaben laden
+    const tRes = await fetch(SUPA_URL + '/rest/v1/tasks?select=*', { headers });
+    const tasks = await tRes.json();
+    S.tasks = {};
+    tasks.forEach(t => {
+      if (!S.tasks[t.date]) S.tasks[t.date] = [];
+      S.tasks[t.date].push({ text: t.text, b: t.bereich, p: t.prio, done: t.done });
+    });
+
+    // Check-ins laden
+    const cRes = await fetch(SUPA_URL + '/rest/v1/checkins?select=*', { headers });
+    const checkins = await cRes.json();
+    S.checkins = {};
+    checkins.forEach(c => {
+      S.checkins[c.date] = { mood: c.mood, note: c.note, time: c.time };
+    });
+
+    localStorage.setItem('sf2', JSON.stringify(S));
+  } catch(e) {
+    console.log('Offline – lokale Daten werden verwendet.');
+  }
+}
+
+  async function boot() {
     S = JSON.parse(localStorage.getItem('sf2') || '{}');
     if (!S.tasks)    S.tasks    = {};
     if (!S.checkins) S.checkins = {};
     if (!S.tasks[TODAY]) S.tasks[TODAY] = [];
     document.getElementById('today-label').textContent =
       new Date().toLocaleDateString('de-DE', { weekday:'long', day:'numeric', month:'long' });
+    renderTasks();
+    await loadFromSupabase();
+    if (!S.tasks[TODAY]) S.tasks[TODAY] = [];
     renderTasks();
   }
 
