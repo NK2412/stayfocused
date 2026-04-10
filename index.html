@@ -511,7 +511,10 @@
       <button onclick="showView('review',this,false)">Review</button>
       <button onclick="showView('statistiken',this,false)">Statistiken</button>
     </nav>
-    <button class="ghost-btn" onclick="logout()">Abmelden</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button id="refresh-btn" class="ghost-btn" onclick="refreshData()" title="Daten aktualisieren">↻</button>
+      <button class="ghost-btn" onclick="logout()">Abmelden</button>
+    </div>
   </header>
 
   <!-- Mobile Header -->
@@ -530,7 +533,11 @@
   <div class="burger-menu" id="burger-menu">
     <div class="burger-menu-header">
       <span class="burger-menu-title">Menü</span>
-      <button class="burger-close" onclick="closeBurger()">×</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button id="refresh-btn-mobile" class="ghost-btn" onclick="refreshData()" title="Aktualisieren"
+          style="font-size:18px;padding:4px 8px;">↻</button>
+        <button class="burger-close" onclick="closeBurger()">×</button>
+      </div>
     </div>
     <nav class="burger-nav">
       <button class="burger-nav-btn active" id="bnav-heute"       onclick="showView('heute',this,true);closeBurger()">Heute</button>
@@ -936,6 +943,28 @@
     if (name === 'review')      renderReview();
     if (name === 'ziele')       renderGoals();
     if (name === 'kanban')      renderKanban();
+}
+
+  async function refreshData() {
+    const btn = document.getElementById('refresh-btn');
+    btn.textContent = '↻';
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+    await loadFromSupabase();
+    ensureDefaults();
+    saveLocal();
+    renderTasks();
+    const active = document.querySelector('.view.active');
+    if (active) {
+      const name = active.id.replace('view-','');
+      if (name === 'statistiken') renderStats();
+      if (name === 'review')      renderReview();
+      if (name === 'ziele')       renderGoals();
+      if (name === 'kanban')      renderKanban();
+    }
+    btn.textContent = '↻';
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
   }
 
   // ── DEADLINE TAG ───────────────────────────────────────
