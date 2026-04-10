@@ -512,7 +512,7 @@
       <button onclick="showView('statistiken',this,false)">Statistiken</button>
     </nav>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button id="refresh-btn" class="ghost-btn" onclick="refreshData()" title="Daten aktualisieren">↻</button>
+      <button id="refresh-btn" class="ghost-btn" onclick="refreshData()">↻</button>
       <button class="ghost-btn" onclick="logout()">Abmelden</button>
     </div>
   </header>
@@ -945,15 +945,19 @@
     if (name === 'kanban')      renderKanban();
 }
 
-  async function refreshData() {
-    const btn = document.getElementById('refresh-btn');
-    btn.textContent = '↻';
-    btn.style.opacity = '0.5';
-    btn.style.pointerEvents = 'none';
+async function refreshData() {
+  const btn = document.getElementById('refresh-btn');
+  const btnMobile = document.getElementById('refresh-btn-mobile');
+
+  // Animation starten
+  [btn, btnMobile].forEach(b => { if(b) { b.style.opacity = '0.5'; b.style.pointerEvents = 'none'; }});
+
+  try {
     await loadFromSupabase();
     ensureDefaults();
     saveLocal();
     renderTasks();
+
     const active = document.querySelector('.view.active');
     if (active) {
       const name = active.id.replace('view-','');
@@ -962,10 +966,22 @@
       if (name === 'ziele')       renderGoals();
       if (name === 'kanban')      renderKanban();
     }
-    btn.textContent = '↻';
-    btn.style.opacity = '1';
-    btn.style.pointerEvents = 'auto';
+
+    // Erfolg anzeigen
+    [btn, btnMobile].forEach(b => { if(b) b.textContent = '✓'; });
+    setTimeout(() => {
+      [btn, btnMobile].forEach(b => { if(b) b.textContent = '⟳'; });
+    }, 1500);
+
+  } catch(e) {
+    [btn, btnMobile].forEach(b => { if(b) b.textContent = '✗'; });
+    setTimeout(() => {
+      [btn, btnMobile].forEach(b => { if(b) b.textContent = '⟳'; });
+    }, 1500);
+  } finally {
+    [btn, btnMobile].forEach(b => { if(b) { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; }});
   }
+}
 
   // ── DEADLINE TAG ───────────────────────────────────────
   function deadlineTag(dl) {
