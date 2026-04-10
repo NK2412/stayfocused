@@ -77,7 +77,6 @@
     /* ── APP SHELL ───────────────────────────────────── */
     #app { display: none; }
 
-    /* Desktop Header */
     .desktop-header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -123,65 +122,35 @@
       z-index: 200;
     }
 
-    /* Burger Menu */
+    /* Burger */
     .burger-btn {
       background: none; border: none; cursor: pointer;
       padding: 6px; border-radius: 8px; color: var(--text);
       display: flex; flex-direction: column; gap: 4px;
     }
-
-    .burger-btn span {
-      display: block; width: 20px; height: 2px;
-      background: var(--text); border-radius: 2px;
-      transition: all 0.2s;
-    }
+    .burger-btn span { display: block; width: 20px; height: 2px; background: var(--text); border-radius: 2px; }
 
     .burger-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 300;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 300;
     }
-
     .burger-overlay.open { display: block; }
 
     .burger-menu {
-      position: fixed;
-      top: 0; right: -280px;
-      width: 260px;
-      height: 100%;
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      z-index: 400;
-      padding: 0;
-      transition: right 0.25s ease;
-      display: flex;
-      flex-direction: column;
+      position: fixed; top: 0; right: -280px; width: 260px; height: 100%;
+      background: var(--surface); border-left: 1px solid var(--border);
+      z-index: 400; transition: right 0.25s ease; display: flex; flex-direction: column;
     }
-
     .burger-menu.open { right: 0; }
 
     .burger-menu-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
     }
-
     .burger-menu-title { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+    .burger-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--muted); padding: 4px; line-height: 1; }
 
-    .burger-close {
-      background: none; border: none; font-size: 20px; cursor: pointer;
-      color: var(--muted); padding: 4px; line-height: 1;
-    }
-
-    .burger-nav {
-      padding: 12px 0;
-      flex: 1;
-    }
-
+    .burger-nav { padding: 12px 0; flex: 1; }
     .burger-nav-btn {
       display: block; width: 100%; text-align: left;
       padding: 14px 20px; background: none; border: none;
@@ -189,18 +158,9 @@
       color: var(--text); font-family: inherit;
       border-left: 3px solid transparent;
     }
+    .burger-nav-btn.active { color: var(--accent); border-left-color: var(--accent); background: var(--bg); }
 
-    .burger-nav-btn.active {
-      color: var(--accent);
-      border-left-color: var(--accent);
-      background: var(--bg);
-    }
-
-    .burger-footer {
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-    }
-
+    .burger-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
     .burger-logout {
       width: 100%; padding: 11px; background: var(--bg); color: var(--muted);
       border: 1px solid var(--border); border-radius: 10px; font-size: 14px;
@@ -231,7 +191,7 @@
     .form-input {
       padding: 10px 14px; border: 1px solid var(--border); border-radius: 9px;
       font-size: 14px; background: var(--bg); color: var(--text); outline: none;
-      font-family: inherit; width: 100%;
+      font-family: inherit; width: 100%; box-sizing: border-box;
     }
     .form-input:focus { border-color: var(--accent); }
 
@@ -241,23 +201,15 @@
       cursor: pointer; font-family: inherit; appearance: none; -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a09d96' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 10px center;
+      box-sizing: border-box;
     }
 
     .form-date {
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      font-size: 16px;
-      background: var(--bg);
-      color: var(--text);
-      outline: none;
-      font-family: inherit;
-      cursor: pointer;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      -webkit-appearance: none;
-      appearance: none;
+      padding: 10px 14px; border: 1px solid var(--border); border-radius: 9px;
+      font-size: 14px; background: var(--bg); color: var(--text); outline: none;
+      font-family: inherit; cursor: pointer; width: 100%;
+      max-width: 100%; box-sizing: border-box;
+      -webkit-appearance: none; appearance: none;
     }
 
     .submit-btn {
@@ -269,28 +221,41 @@
     .submit-btn-full {
       width: 100%; padding: 13px; background: var(--accent); color: var(--bg);
       border: none; border-radius: 10px; font-size: 15px; font-weight: 500;
-      cursor: pointer; font-family: inherit;
+      cursor: pointer; font-family: inherit; box-sizing: border-box;
     }
 
-    .task-form-desktop { display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 8px; margin-bottom: 18px; align-items: center; }
-    .task-form-mobile  { display: none; flex-direction: column; gap: 8px; margin-bottom: 18px; width: 100%; overflow: hidden; box-sizing: border-box; }
-    .form-selects-row  { display: flex; gap: 8px; }
-    .form-selects-row .form-select { flex: 1; }
-
-    /* ── STATUS SELECTOR ─────────────────────────────── */
-    .status-row {
-      display: flex;
-      gap: 6px;
-      margin-top: 8px;
+    /* Task Forms */
+    .task-form-desktop {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto auto;
+      gap: 8px; margin-bottom: 18px; align-items: center;
     }
 
+    .task-form-mobile {
+      display: none; flex-direction: column;
+      gap: 8px; margin-bottom: 18px;
+      width: 100%; box-sizing: border-box;
+    }
+
+    .form-selects-row { display: flex; gap: 8px; }
+    .form-selects-row .form-select { flex: 1; min-width: 0; }
+
+    .date-field-wrap {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+
+    .date-field-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted); padding-left: 2px;
+    }
+
+    /* ── STATUS PILLS ────────────────────────────────── */
+    .status-row { display: flex; gap: 6px; margin-top: 8px; }
     .status-pill {
       flex: 1; padding: 6px 4px; border-radius: 8px; border: 1px solid var(--border);
       background: var(--bg); font-size: 11px; font-weight: 600; cursor: pointer;
       text-align: center; color: var(--muted); font-family: inherit;
-      letter-spacing: 0.03em; transition: all 0.15s;
     }
-
     .status-pill.active-offen    { background: #eef2fd; color: #2952c4; border-color: #c5d3f8; }
     .status-pill.active-inarbeit { background: #fdf3ea; color: #b85c10; border-color: #f5d0a8; }
     .status-pill.active-erledigt { background: #edfaf3; color: #1a7a4a; border-color: #a8dfc0; }
@@ -324,8 +289,8 @@
     .task-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
     .icon-btn {
       background: none; border: none; cursor: pointer; padding: 5px;
-      color: var(--muted); border-radius: 6px; display: flex; align-items: center;
-      justify-content: center; width: 30px; height: 30px;
+      color: var(--muted); border-radius: 6px; display: flex;
+      align-items: center; justify-content: center; width: 30px; height: 30px;
     }
     .icon-btn:hover { color: var(--text); background: var(--bg); }
     .icon-btn.danger:hover { color: var(--danger); }
@@ -363,7 +328,7 @@
 
     .kanban-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
     .kanban-card:last-child { margin-bottom: 0; }
-    .kanban-card-text { font-size: 13px; line-height: 1.4; margin-bottom: 8px; font-weight: 500; }
+    .kanban-card-text { font-size: 13px; line-height: 1.4; margin-bottom: 6px; font-weight: 500; }
     .kanban-card-date { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
     .kanban-card-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
 
@@ -374,10 +339,8 @@
       font-family: inherit; color: var(--muted); text-align: center;
     }
     .kanban-action-btn:hover { border-color: var(--accent); color: var(--text); }
-
     .kanban-empty { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
 
-    /* Mobile Kanban – horizontales Scrollen */
     .kanban-mobile-wrap {
       display: none;
       overflow-x: auto;
@@ -386,7 +349,6 @@
       padding-bottom: 8px;
       scroll-snap-type: x mandatory;
     }
-
     .kanban-mobile-wrap .kanban-col {
       min-width: 75vw;
       scroll-snap-align: start;
@@ -415,7 +377,7 @@
     .mood-btn { padding: 11px 6px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; color: var(--text); font-family: inherit; }
     .mood-btn.selected { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
-    .checkin-note { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; resize: none; background: var(--bg); color: var(--text); outline: none; line-height: 1.65; }
+    .checkin-note { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; resize: none; background: var(--bg); color: var(--text); outline: none; line-height: 1.65; box-sizing: border-box; }
     .checkin-note:focus { border-color: var(--accent); }
     .checkin-save { margin-top: 10px; padding: 11px 20px; background: var(--accent); color: var(--bg); border: none; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; width: 100%; }
 
@@ -431,7 +393,7 @@
     .goal-del:hover { color: var(--danger); }
 
     .goal-form { display: flex; gap: 8px; margin-bottom: 18px; align-items: center; }
-    .goal-form-mobile { display: none; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+    .goal-form-mobile { display: none; flex-direction: column; gap: 8px; margin-bottom: 18px; width: 100%; box-sizing: border-box; }
 
     .bp-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
     .bp-label { font-size: 13px; min-width: 60px; }
@@ -440,7 +402,7 @@
     .bp-pct { font-size: 12px; color: var(--muted); min-width: 32px; text-align: right; }
 
     /* ── REVIEW ──────────────────────────────────────── */
-    .review-period { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; }
+    .review-period { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 8px; }
     .review-period-label { font-size: 13px; color: var(--muted); }
     .review-section { margin-bottom: 20px; }
     .review-section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
@@ -451,12 +413,12 @@
     .mood-bar.okay   { background: #b85c10; }
     .mood-bar.schwer { background: #b91c1c; }
     .mood-bar.leer   { background: var(--border); }
-    .review-note-area { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; resize: none; background: var(--bg); color: var(--text); outline: none; line-height: 1.65; }
+    .review-note-area { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; resize: none; background: var(--bg); color: var(--text); outline: none; line-height: 1.65; box-sizing: border-box; }
     .review-save { margin-top: 10px; padding: 11px; background: var(--accent); color: var(--bg); border: none; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; width: 100%; }
-    .pct-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .pct-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
     .pct-row:last-child { border-bottom: none; }
     .pct-label { font-size: 13px; white-space: nowrap; min-width: 60px; }
-    .pct-bar-wrap { flex: 1; height: 4px; background: var(--bg); border-radius: 2px; overflow: hidden; }
+    .pct-bar-wrap { flex: 1; height: 4px; background: var(--bg); border-radius: 2px; overflow: hidden; min-width: 60px; }
     .pct-bar { height: 100%; border-radius: 2px; background: var(--accent); }
     .pct-value { font-size: 13px; font-weight: 500; white-space: nowrap; }
 
@@ -504,19 +466,17 @@
       .goal-form-mobile  { display: flex; }
       .timer-layout-desktop { display: none; }
       .timer-layout-mobile  { display: flex; }
-
-      /* Kanban: Desktop Grid ausblenden, Mobile Scroll einblenden */
-      .kanban-board      { display: none; }
-      .kanban-mobile-wrap { display: flex; }
+      .kanban-board         { display: none; }
+      .kanban-mobile-wrap   { display: flex; }
 
       .kpi-num   { font-size: 28px; }
       .kpi-card  { padding: 14px 10px; }
       .kpi-label { font-size: 9px; }
-
       .history-item  { flex-direction: column; gap: 6px; }
       .history-right { text-align: left; }
-      .mood-btn { font-size: 12px; }
-      .tab-btn  { font-size: 12px; padding: 6px 4px; }
+      .mood-btn  { font-size: 12px; }
+      .tab-btn   { font-size: 12px; padding: 6px 4px; }
+      .status-pill { font-size: 10px; padding: 5px 2px; }
     }
   </style>
 </head>
@@ -589,16 +549,19 @@
     <p class="view-title" id="today-label"></p>
     <p class="view-sub">Was zählt heute wirklich?</p>
 
+    <!-- Aufgaben -->
     <div class="card">
       <div class="card-label">Aufgaben</div>
 
       <!-- Desktop Form -->
       <div class="task-form-desktop">
-        <input class="form-input" type="text" id="ti-d" placeholder="Neue Aufgabe…" maxlength="100"
-          onkeydown="if(event.key==='Enter') addTask('d')">
+        <input class="form-input" type="text" id="ti-d" placeholder="Neue Aufgabe…"
+          maxlength="100" onkeydown="if(event.key==='Enter') addTask('d')">
         <select class="form-select" id="tb-d">
-          <option value="arbeit">Arbeit</option><option value="sport">Sport</option>
-          <option value="alltag">Alltag</option><option value="privat">Privat</option>
+          <option value="arbeit">Arbeit</option>
+          <option value="sport">Sport</option>
+          <option value="alltag">Alltag</option>
+          <option value="privat">Privat</option>
           <option value="lernen">Lernen</option>
         </select>
         <select class="form-select" id="tp-d">
@@ -617,8 +580,10 @@
           onkeydown="if(event.key==='Enter') addTask('m')">
         <div class="form-selects-row">
           <select class="form-select" id="tb-m" style="font-size:15px">
-            <option value="arbeit">Arbeit</option><option value="sport">Sport</option>
-            <option value="alltag">Alltag</option><option value="privat">Privat</option>
+            <option value="arbeit">Arbeit</option>
+            <option value="sport">Sport</option>
+            <option value="alltag">Alltag</option>
+            <option value="privat">Privat</option>
             <option value="lernen">Lernen</option>
           </select>
           <select class="form-select" id="tp-m" style="font-size:15px">
@@ -627,10 +592,9 @@
             <option value="niedrig">↓ Niedrig</option>
           </select>
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding-left:2px;">Zieldatum (optional)</span>
-          <input type="date" id="td-m" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:9px;font-size:16px;background:var(--bg);color:var(--text);font-family:inherit;outline:none;box-sizing:border-box;-webkit-appearance:none;appearance:none;">
-        </div>
+        <div class="date-field-wrap">
+          <span class="date-field-label">Zieldatum (optional)</span>
+          <input class="form-date" type="date" id="td-m" style="font-size:16px">
         </div>
         <button class="submit-btn-full" onclick="addTask('m')">Hinzufügen</button>
       </div>
@@ -645,9 +609,9 @@
         <div>
           <div class="timer-time" id="timer-d">25:00</div>
           <div class="timer-pills">
-            <button class="timer-pill active" id="dp-25" onclick="setDur(25,this,'d')">25 min</button>
-            <button class="timer-pill"        id="dp-50" onclick="setDur(50,this,'d')">50 min</button>
-            <button class="timer-pill"        id="dp-90" onclick="setDur(90,this,'d')">90 min</button>
+            <button class="timer-pill active" onclick="setDur(25,this,'d')">25 min</button>
+            <button class="timer-pill" onclick="setDur(50,this,'d')">50 min</button>
+            <button class="timer-pill" onclick="setDur(90,this,'d')">90 min</button>
           </div>
         </div>
         <div class="timer-actions">
@@ -658,9 +622,9 @@
       <div class="timer-layout-mobile">
         <div class="timer-time-lg" id="timer-m">25:00</div>
         <div class="timer-pills">
-          <button class="timer-pill active" id="mp-25" onclick="setDur(25,this,'m')">25 min</button>
-          <button class="timer-pill"        id="mp-50" onclick="setDur(50,this,'m')">50 min</button>
-          <button class="timer-pill"        id="mp-90" onclick="setDur(90,this,'m')">90 min</button>
+          <button class="timer-pill active" onclick="setDur(25,this,'m')">25 min</button>
+          <button class="timer-pill" onclick="setDur(50,this,'m')">50 min</button>
+          <button class="timer-pill" onclick="setDur(90,this,'m')">90 min</button>
         </div>
         <div class="timer-actions">
           <button class="timer-btn-lg primary" id="tbtn-m" onclick="toggleTimer()">Start</button>
@@ -680,21 +644,15 @@
       </div>
       <textarea class="checkin-note" id="checkin-note" rows="3"
         placeholder="Was läuft gut? Was blockiert dich?"></textarea>
-        <button class="checkin-save" onclick="saveCheckin()">Speichern</button>
-      </div>
+      <button class="checkin-save" onclick="saveCheckin()">Speichern</button>
     </div>
-    </div>
-    </div>
+  </div>
 
   <!-- ── KANBAN ─────────────────────────────────────── -->
   <div class="view" id="view-kanban">
     <p class="view-title">Kanban</p>
     <p class="view-sub">Alle Aufgaben im Überblick.</p>
-
-    <!-- Desktop -->
     <div class="kanban-board" id="kanban-board-desktop"></div>
-
-    <!-- Mobile: horizontal scrollbar -->
     <div class="kanban-mobile-wrap" id="kanban-board-mobile"></div>
   </div>
 
@@ -710,22 +668,29 @@
     </div>
     <div class="card">
       <div class="card-label" id="goal-period-label">Tagesziele</div>
+      <!-- Desktop -->
       <div class="goal-form">
-        <input class="form-input" type="text" id="gi-d" placeholder="Neues Ziel…" maxlength="100"
-          onkeydown="if(event.key==='Enter') addGoal('d')">
+        <input class="form-input" type="text" id="gi-d" placeholder="Neues Ziel…"
+          maxlength="100" onkeydown="if(event.key==='Enter') addGoal('d')">
         <select class="form-select" id="gb-d">
-          <option value="arbeit">Arbeit</option><option value="sport">Sport</option>
-          <option value="alltag">Alltag</option><option value="privat">Privat</option>
+          <option value="arbeit">Arbeit</option>
+          <option value="sport">Sport</option>
+          <option value="alltag">Alltag</option>
+          <option value="privat">Privat</option>
           <option value="lernen">Lernen</option>
         </select>
         <button class="submit-btn" onclick="addGoal('d')">Hinzufügen</button>
       </div>
+      <!-- Mobile -->
       <div class="goal-form-mobile">
-        <input class="form-input" type="text" id="gi-m" placeholder="Neues Ziel…" maxlength="100"
-          style="font-size:16px" onkeydown="if(event.key==='Enter') addGoal('m')">
+        <input class="form-input" type="text" id="gi-m" placeholder="Neues Ziel…"
+          maxlength="100" style="font-size:16px"
+          onkeydown="if(event.key==='Enter') addGoal('m')">
         <select class="form-select" id="gb-m" style="font-size:15px">
-          <option value="arbeit">Arbeit</option><option value="sport">Sport</option>
-          <option value="alltag">Alltag</option><option value="privat">Privat</option>
+          <option value="arbeit">Arbeit</option>
+          <option value="sport">Sport</option>
+          <option value="alltag">Alltag</option>
+          <option value="privat">Privat</option>
           <option value="lernen">Lernen</option>
         </select>
         <button class="submit-btn-full" onclick="addGoal('m')">Hinzufügen</button>
@@ -859,9 +824,6 @@
   }
 
   // ── SUPABASE ───────────────────────────────────────────
-  // Supabase ist die einzige Quelle der Wahrheit wenn online
-  // localStorage dient nur als Offline-Fallback
-
   async function supaFetch(path, opts={}) {
     if (!SUPA_URL || !SUPA_KEY) return null;
     const headers = {
@@ -872,15 +834,11 @@
       ...opts.headers
     };
     try {
-      const res = await fetch(SUPA_URL + path, { ...opts, headers });
-      return res;
-    } catch(e) {
-      return null;
-    }
+      return await fetch(SUPA_URL + path, { ...opts, headers });
+    } catch(e) { return null; }
   }
 
   async function loadFromSupabase() {
-    // Tasks laden
     const tRes = await supaFetch('/rest/v1/tasks?select=*');
     if (tRes && tRes.ok) {
       const tasks = await tRes.json();
@@ -896,8 +854,6 @@
         });
       }
     }
-
-    // Checkins laden
     const cRes = await supaFetch('/rest/v1/checkins?select=*');
     if (cRes && cRes.ok) {
       const checkins = await cRes.json();
@@ -912,15 +868,14 @@
 
   async function syncTasksToSupabase() {
     if (!SUPA_URL || !SUPA_KEY) return;
-    // Heutigen Tag komplett neu schreiben
     await supaFetch('/rest/v1/tasks?date=eq.' + TODAY, { method: 'DELETE' });
     const tasks = S.tasks[TODAY] || [];
     if (tasks.length) {
       await supaFetch('/rest/v1/tasks', {
         method: 'POST',
         body: JSON.stringify(tasks.map(t => ({
-          date: TODAY, text: t.text, bereich: t.b,
-          prio: t.p, done: t.done, status: t.status || 'offen',
+          date: TODAY, text: t.text, bereich: t.b, prio: t.p,
+          done: t.done, status: t.status || 'offen',
           deadline: t.deadline || null
         })))
       });
@@ -949,7 +904,6 @@
 
   // ── BOOT ───────────────────────────────────────────────
   async function boot() {
-    // Zuerst lokal laden für sofortige Anzeige
     try {
       const raw = localStorage.getItem('sf5');
       if (raw) S = JSON.parse(raw);
@@ -962,7 +916,6 @@
 
     renderTasks();
 
-    // Dann Supabase laden – überschreibt lokale Daten
     await loadFromSupabase();
     ensureDefaults();
     saveLocal();
@@ -973,14 +926,12 @@
   function showView(name, btn, mobile) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-'+name).classList.add('active');
-
     if (mobile) {
       document.querySelectorAll('.burger-nav-btn').forEach(b => b.classList.remove('active'));
     } else {
       document.querySelectorAll('.desktop-nav button').forEach(b => b.classList.remove('active'));
     }
     btn.classList.add('active');
-
     if (name === 'statistiken') renderStats();
     if (name === 'review')      renderReview();
     if (name === 'ziele')       renderGoals();
@@ -991,7 +942,7 @@
   function deadlineTag(dl) {
     if (!dl) return '';
     const diff = Math.ceil((new Date(dl) - new Date(TODAY)) / 86400000);
-    const label = new Date(dl + 'T12:00:00').toLocaleDateString('de-DE', { day:'numeric', month:'short' });
+    const label = new Date(dl+'T12:00:00').toLocaleDateString('de-DE', { day:'numeric', month:'short' });
     if (diff < 0)   return `<span class="deadline-tag dl-overdue">⚠ ${label}</span>`;
     if (diff === 0) return `<span class="deadline-tag dl-today">Heute fällig</span>`;
     if (diff <= 3)  return `<span class="deadline-tag dl-soon">${label}</span>`;
@@ -1055,7 +1006,8 @@
             <div class="task-actions">
               <button class="icon-btn" onclick="toggleExpand(${i})" title="Sub-Tasks">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                  <line x1="8" y1="6" x2="21" y2="6"/>
+                  <line x1="8" y1="12" x2="21" y2="12"/>
                   <line x1="8" y1="18" x2="21" y2="18"/>
                   <circle cx="3" cy="6" r="1" fill="currentColor"/>
                   <circle cx="3" cy="12" r="1" fill="currentColor"/>
@@ -1164,7 +1116,7 @@
           <span class="kanban-col-title">${K_LABEL[status]}</span>
           <span class="kanban-count">${col.length}</span>
         </div>
-        ${col.length === 0 ? '<div class="kanban-empty">Leer</div>' :
+        ${!col.length ? '<div class="kanban-empty">Leer</div>' :
           col.map(t => {
             const ds = new Date(t.date+'T12:00:00').toLocaleDateString('de-DE',{day:'numeric',month:'short'});
             return `<div class="kanban-card">
@@ -1191,7 +1143,6 @@
     Object.entries(S.tasks).forEach(([date, tasks]) => {
       tasks.forEach((t, idx) => allTasks.push({ ...t, date, idx }));
     });
-
     const html = K_STATUS.map(s => kanbanColHTML(s, allTasks)).join('');
     document.getElementById('kanban-board-desktop').innerHTML = html;
     document.getElementById('kanban-board-mobile').innerHTML  = html;
@@ -1218,11 +1169,9 @@
 
   function setDur(min, btn, src) {
     if (tRun) return;
-    tDur = min;
-    tSec = min * 60;
+    tDur = min; tSec = min * 60;
     syncTimerDisplay();
-    // Aktiven Pill in der richtigen Gruppe setzen
-    const grp = src === 'm' ? '.timer-layout-mobile .timer-pill' : '.timer-layout-desktop .timer-pill';
+    const grp = src==='m' ? '.timer-layout-mobile .timer-pill' : '.timer-layout-desktop .timer-pill';
     document.querySelectorAll(grp).forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   }
@@ -1242,8 +1191,7 @@
     } else {
       tRun = true; syncTimerBtns('Pause');
       tInt = setInterval(() => {
-        tSec--;
-        syncTimerDisplay();
+        tSec--; syncTimerDisplay();
         if (tSec <= 0) {
           clearInterval(tInt); tRun = false;
           syncTimerBtns('Start'); document.title = 'StayFocused';
@@ -1255,10 +1203,8 @@
 
   function resetTimer() {
     clearInterval(tInt); tRun = false;
-    // tDur merkt sich die zuletzt gewählte Dauer
     tSec = tDur * 60;
-    syncTimerDisplay();
-    syncTimerBtns('Start');
+    syncTimerDisplay(); syncTimerBtns('Start');
   }
 
   // ── CHECK-IN ───────────────────────────────────────────
@@ -1285,7 +1231,7 @@
   let currentGoalEbene = 'tag';
   const EBENE_LABEL = { tag:'Tagesziele', woche:'Wochenziele', monat:'Monatsziele', jahr:'Jahresziele' };
 
-  function getWeekKey()  { const d=new Date(),day=d.getDay()||7; d.setDate(d.getDate()-day+1); return 'W'+d.toISOString().split('T')[0]; }
+  function getWeekKey()  { const d=new Date(), day=d.getDay()||7; d.setDate(d.getDate()-day+1); return 'W'+d.toISOString().split('T')[0]; }
   function getMonthKey() { return 'M'+TODAY.slice(0,7); }
   function getYearKey()  { return 'Y'+TODAY.slice(0,4); }
   function getPeriodKey(e) {
@@ -1324,8 +1270,8 @@
     const prog = document.getElementById('goal-bereich-progress');
     if (!goals.length) { prog.innerHTML = '<div class="empty-state">Noch keine Ziele.</div>'; return; }
     prog.innerHTML = BEREICHE.map(b => {
-      const all  = goals.filter(g=>g.b===b).length;
-      const done = goals.filter(g=>g.b===b&&g.done).length;
+      const all  = goals.filter(g => g.b===b).length;
+      const done = goals.filter(g => g.b===b && g.done).length;
       if (!all) return '';
       const pct = Math.round(done/all*100);
       return `<div class="bp-row">
@@ -1341,7 +1287,7 @@
     const text = document.getElementById('gi'+s).value.trim(); if (!text) return;
     const periode = getPeriodKey(currentGoalEbene);
     if (!S.goals[periode]) S.goals[periode] = [];
-    S.goals[periode].push({ text, b:document.getElementById('gb'+s).value, done:false });
+    S.goals[periode].push({ text, b: document.getElementById('gb'+s).value, done: false });
     document.getElementById('gi'+s).value = '';
     document.getElementById('gi'+s).focus();
     saveLocal(); renderGoals();
@@ -1382,7 +1328,8 @@
   }
 
   function renderReview() {
-    const ebene=currentReviewEbene, periode=getPeriodKey(ebene), dates=getReviewDates(ebene), now=new Date();
+    const ebene=currentReviewEbene, periode=getPeriodKey(ebene);
+    const dates=getReviewDates(ebene), now=new Date();
 
     if (ebene==='woche') {
       const day=now.getDay()||7, mon=new Date(now); mon.setDate(now.getDate()-day+1);
@@ -1392,7 +1339,8 @@
         mon.toLocaleDateString('de-DE',{day:'numeric',month:'short'})+' – '+
         sun.toLocaleDateString('de-DE',{day:'numeric',month:'short'});
     } else if (ebene==='monat') {
-      document.getElementById('review-period-title').textContent=now.toLocaleDateString('de-DE',{month:'long',year:'numeric'});
+      document.getElementById('review-period-title').textContent=
+        now.toLocaleDateString('de-DE',{month:'long',year:'numeric'});
       document.getElementById('review-period-range').textContent='';
     } else {
       document.getElementById('review-period-title').textContent=now.getFullYear().toString();
@@ -1400,20 +1348,33 @@
     }
 
     const goals=S.goals[periode]||[], rg=document.getElementById('review-goals');
-    if (!goals.length) { rg.innerHTML='<div class="empty-state" style="padding:12px 0">Keine Ziele für diesen Zeitraum.</div>'; }
-    else {
+    if (!goals.length) {
+      rg.innerHTML='<div class="empty-state" style="padding:12px 0">Keine Ziele für diesen Zeitraum.</div>';
+    } else {
       const done=goals.filter(g=>g.done).length, pct=Math.round(done/goals.length*100);
       rg.innerHTML=`<div class="pct-row"><span class="pct-label">Gesamt</span><div class="pct-bar-wrap"><div class="pct-bar" style="width:${pct}%"></div></div><span class="pct-value">${done}/${goals.length}</span></div>`+
-        BEREICHE.map(b=>{const all=goals.filter(g=>g.b===b).length,d=goals.filter(g=>g.b===b&&g.done).length;if(!all)return'';const p=Math.round(d/all*100);return`<div class="pct-row"><span class="pct-label">${CAP(b)}</span><div class="pct-bar-wrap"><div class="pct-bar" style="width:${p}%"></div></div><span class="pct-value">${d}/${all}</span></div>`;}).join('');
+        BEREICHE.map(b=>{
+          const all=goals.filter(g=>g.b===b).length, d=goals.filter(g=>g.b===b&&g.done).length;
+          if(!all) return '';
+          const p=Math.round(d/all*100);
+          return `<div class="pct-row"><span class="pct-label">${CAP(b)}</span><div class="pct-bar-wrap"><div class="pct-bar" style="width:${p}%"></div></div><span class="pct-value">${d}/${all}</span></div>`;
+        }).join('');
     }
 
-    const moodH={super:4,gut:3,okay:2,schwer:1}, dd=ebene==='woche'?dates:dates.slice(0,12);
-    document.getElementById('review-mood').innerHTML=dd.map(d=>{const c=S.checkins[d],cls=c?c.mood:'leer',h=c?(moodH[c.mood]/4*100):20;return`<div class="mood-bar ${cls}" style="height:${h}%" title="${d}"></div>`;}).join('');
+    const moodH={super:4,gut:3,okay:2,schwer:1};
+    const dd=ebene==='woche'?dates:dates.slice(0,12);
+    document.getElementById('review-mood').innerHTML=dd.map(d=>{
+      const c=S.checkins[d], cls=c?c.mood:'leer', h=c?(moodH[c.mood]/4*100):20;
+      return `<div class="mood-bar ${cls}" style="height:${h}%" title="${d}"></div>`;
+    }).join('');
 
     let bc={};
     dates.forEach(d=>{(S.tasks[d]||[]).forEach(t=>{if(t.done)bc[t.b]=(bc[t.b]||0)+1;});});
     const maxB=Math.max(...BEREICHE.map(b=>bc[b]||0),1);
-    document.getElementById('review-bereiche').innerHTML=BEREICHE.map(b=>{const n=bc[b]||0;return`<div class="bar-row"><div class="bar-meta"><span>${CAP(b)}</span><span>${n} erledigt</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxB*100)}%"></div></div></div>`;}).join('');
+    document.getElementById('review-bereiche').innerHTML=BEREICHE.map(b=>{
+      const n=bc[b]||0;
+      return `<div class="bar-row"><div class="bar-meta"><span>${CAP(b)}</span><span>${n} erledigt</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxB*100)}%"></div></div></div>`;
+    }).join('');
 
     const saved=S.reviews[periode];
     document.getElementById('review-note').value=saved?saved.note:'';
@@ -1436,14 +1397,22 @@
 
   function renderStats() {
     let total=0; const bc={};
-    Object.values(S.tasks).forEach(tasks=>tasks.forEach(t=>{if(t.done){total++;bc[t.b]=(bc[t.b]||0)+1;}}));
+    Object.values(S.tasks).forEach(tasks=>tasks.forEach(t=>{
+      if(t.done){total++;bc[t.b]=(bc[t.b]||0)+1;}
+    }));
     document.getElementById('s-total').textContent=total;
     document.getElementById('s-days').textContent=Object.keys(S.checkins).length;
-    let streak=0,d=new Date();
-    while(true){const k=d.toISOString().split('T')[0];if(S.checkins[k]){streak++;d.setDate(d.getDate()-1);}else break;}
+    let streak=0, d=new Date();
+    while(true){
+      const k=d.toISOString().split('T')[0];
+      if(S.checkins[k]){streak++;d.setDate(d.getDate()-1);}else break;
+    }
     document.getElementById('s-streak').textContent=streak;
     const maxB=Math.max(...BEREICHE.map(b=>bc[b]||0),1);
-    document.getElementById('bereich-bars').innerHTML=BEREICHE.map(b=>{const n=bc[b]||0;return`<div class="bar-row"><div class="bar-meta"><span>${CAP(b)}</span><span>${n} erledigt</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxB*100)}%"></div></div></div>`;}).join('');
+    document.getElementById('bereich-bars').innerHTML=BEREICHE.map(b=>{
+      const n=bc[b]||0;
+      return `<div class="bar-row"><div class="bar-meta"><span>${CAP(b)}</span><span>${n} erledigt</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxB*100)}%"></div></div></div>`;
+    }).join('');
     renderHistory();
   }
 
@@ -1457,7 +1426,17 @@
     el.innerHTML=entries.map(([date,c])=>{
       const done=(S.tasks[date]||[]).filter(t=>t.done).length;
       const ds=new Date(date+'T12:00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-      return`<div class="history-item"><div><div class="history-date">${ds}</div>${c.note?`<div class="history-note">${c.note}</div>`:''}<span class="mood-chip ${mc[c.mood]}">${ml[c.mood]}</span></div><div class="history-right"><div class="history-count">${done} Aufgabe${done!==1?'n':''}</div><div class="history-time">${c.time} Uhr</div></div></div>`;
+      return `<div class="history-item">
+        <div>
+          <div class="history-date">${ds}</div>
+          ${c.note?`<div class="history-note">${c.note}</div>`:''}
+          <span class="mood-chip ${mc[c.mood]}">${ml[c.mood]}</span>
+        </div>
+        <div class="history-right">
+          <div class="history-count">${done} Aufgabe${done!==1?'n':''}</div>
+          <div class="history-time">${c.time} Uhr</div>
+        </div>
+      </div>`;
     }).join('');
   }
 </script>
