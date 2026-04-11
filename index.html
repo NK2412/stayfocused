@@ -815,6 +815,41 @@
     niedrig: { hoch:1, mittel:2, niedrig:3 }
   };
 
+  function generateMicroAction(task) {
+  // Barrier-basierte Micro-Actions
+  const barrierMicro = {
+    'Unklarheit':
+      `Schreibe in einem Satz auf: Was genau ist das gewünschte Ergebnis von "${task.text}"?`,
+    'Angst vor Misserfolg':
+      `Öffne das relevante Dokument für "${task.text}" und schreibe den ersten Satz – egal wie schlecht.`,
+    'Warte auf Input':
+      `Schicke jetzt die Anfrage ab die du für "${task.text}" brauchst. Einen Satz reicht.`,
+    'Gefühlt zu aufwendig':
+      `Definiere nur den ersten physischen Schritt für "${task.text}". Was würdest du als allererstes anfassen?`,
+    'Keine Lust':
+      `Stelle einen 5-Minuten-Timer. Öffne "${task.text}" und tue irgendetwas damit – Qualität egal.`
+  };
+
+  if (task.barrier && barrierMicro[task.barrier]) {
+    return barrierMicro[task.barrier];
+  }
+
+  // Next-Action wenn vorhanden
+  if (task.next_action) {
+    return `Nur 5 Minuten: ${task.next_action}`;
+  }
+
+  // Energie-basierte Micro-Actions
+  const energyMicro = {
+    hoch:    `Öffne das Dokument für "${task.text}" und schreibe die erste Kernaussage.`,
+    mittel:  `Schreibe 3 Bullet-Points zu "${task.text}" – was sind die nächsten Schritte?`,
+    niedrig: `Lese deine letzten Notizen zu "${task.text}" und markiere den nächsten Schritt.`
+  };
+
+  return energyMicro[task.energy_required] ||
+    `Starte mit dem kleinsten möglichen Schritt für "${task.text}".`;
+}
+
   const BARRIER_INTERVENTIONS = {
     'Unklarheit':           'Diese Aufgabe ist unklar. Definiere jetzt in einem Satz: Was genau ist das gewünschte Ergebnis? Dann ist der erste Schritt offensichtlich.',
     'Angst vor Misserfolg': 'Angst vor Misserfolg bedeutet oft: Die Aufgabe ist wichtig. Starte mit genau 5 Minuten – kein Anspruch auf Perfektion, nur Bewegung.',
@@ -997,38 +1032,85 @@
   }
 
   function staleDecide(decision) {
-    if (!currentStaleTask) return;
-    const date    = currentStaleTask.date;
-    const taskIdx = S.tasks[date]?.findIndex(t=>t.text===currentStaleTask.text&&!t.done);
-    if (taskIdx===undefined||taskIdx===-1) {
-      document.getElementById('br-stale').style.display='none'; return;
-    }
-    if (decision==='delete') {
-      S.tasks[date].splice(taskIdx,1);
-      toast('Aufgabe gelöscht – gute Entscheidung.');
-    } else if (decision==='shrink') {
-      // 5-Min-Version: Aufgabe heute mit einem klaren Micro-Commit
-      const task = {...S.tasks[date][taskIdx], created_date:TODAY, stale_decision:'shrunk'};
-      task.next_action = task.next_action || 'Nur 5 Minuten: Erste konkrete Aktion starten';
-      S.tasks[date].splice(taskIdx,1);
-      if (!S.tasks[TODAY]) S.tasks[TODAY]=[];
-      S.tasks[TODAY].push(task);
-      toast('5-Minuten-Version erstellt – starte jetzt.');
-    } else if (decision==='tomorrow') {
-      const task = {...S.tasks[date][taskIdx], created_date:TODAY, stale_decision:'snoozed', postponed_count:(S.tasks[date][taskIdx].postponed_count||0)+1};
-      S.tasks[date].splice(taskIdx,1);
-      if (!S.tasks[TODAY]) S.tasks[TODAY]=[];
-      S.tasks[TODAY].push(task);
-      toast('Auf heute verschoben.');
-    } else if (decision==='next-week') {
-      S.tasks[date][taskIdx].stale_decision='next-week';
-      S.tasks[date][taskIdx].postponed_count=(S.tasks[date][taskIdx].postponed_count||0)+1;
-      toast('Für nächste Woche vorgemerkt.');
-    }
-    saveLocal(); syncTasks();
-    document.getElementById('br-stale').style.display='none';
-    setTimeout(showStaleAlert,300);
+  if (!currentStaleTask) return;
+  const date    = currentStaleTask.date;
+  const taskIdx = S.tasks[date]?.findIndex(t =>
+    t.text === currentStaleTask.text && !t.done
+  );
+  if (taskIdx === undefined || taskIdx === -1) {
+    document.getElementById('br-stale').style.display = 'none';
+    return;
   }
+
+  if (decision === 'delete') {
+    S.tasks[date].splice(taskIdx, 1);
+    toast('Aufgabe gelöscht – gute Entscheidung.');
+
+  } else if (decision === 'shrink') {
+    const original = S.tasks[date][taskIdx];
+    const microAction = generateMicroAction(original);
+
+    // Original-Aufgabe als erledigt/zurückgestellt markieren
+    S.tasks[date][taskIdx].stale_decision = 'shrunk';
+
+    // Micro-Task für heute erstellen
+    if (!S.tasks[TODAY]) S.tasks[TODAY] = [];
+    S.tasks[TODAY].push({
+      text: original.text,
+      next_action: microAction,
+      barrier: original.barrier || null,
+      important: original.important,
+      urgent: original.urgent,
+      quadrant: original.quadrant || cq(original.important, original.urgent),
+      energy_required: original.energy_required,
+      done: false,
+      deadline: original.deadline || null,
+      created_date: TODAY,
+      postponed_count: 0,
+      stale_decision: null,
+      is_micro: true
+    });
+
+    saveLocal(); syncTasks();
+
+    // Direkt zur Fokus-Session mit dieser Aufgabe
+    const newIdx = S.tasks[TODAY].length - 1;
+    enterApp();
+    focusTaskIdx = newIdx;
+    showView('fokus', document.getElementById('nav-fokus'));
+    renderFokusView();
+
+    // Override Timer auf 5 Minuten
+    focusDur = 5; focusSec = 5 * 60;
+    syncFocusDisplay();
+    document.querySelectorAll('.focus-dur-btn').forEach(b => b.classList.remove('active'));
+
+    toast(`⬇ 5-Minuten-Start: ${microAction}`);
+    return;
+
+  } else if (decision === 'tomorrow') {
+    const task = {
+      ...S.tasks[date][taskIdx],
+      created_date: TODAY,
+      stale_decision: 'snoozed',
+      postponed_count: (S.tasks[date][taskIdx].postponed_count || 0) + 1
+    };
+    S.tasks[date].splice(taskIdx, 1);
+    if (!S.tasks[TODAY]) S.tasks[TODAY] = [];
+    S.tasks[TODAY].push(task);
+    toast('Auf heute verschoben.');
+
+  } else if (decision === 'next-week') {
+    S.tasks[date][taskIdx].stale_decision = 'next-week';
+    S.tasks[date][taskIdx].postponed_count =
+      (S.tasks[date][taskIdx].postponed_count || 0) + 1;
+    toast('Für nächste Woche vorgemerkt.');
+  }
+
+  saveLocal(); syncTasks();
+  document.getElementById('br-stale').style.display = 'none';
+  setTimeout(showStaleAlert, 300);
+}
 
   // ── FOKUS SCORE ────────────────────────────────────────
   function calcFocusScore() {
